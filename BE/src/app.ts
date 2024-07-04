@@ -3,42 +3,47 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import router from "./routes";
-import { Pool, Client } from "pg";
-// import {Connector} from '@google-cloud/cloud-sql-connector';
+import dotenv from "dotenv";
+import { MongoClient, ServerApiVersion } from "mongodb";
+import cookieParser from "cookie-parser";
 
-const port = process.env.PORT || 5000;
-
-// const pool = new Pool({
-//   user: process.env.DBUSER,
-//   host: process.env.DBHOST,
-//   password: process.env.DBPASSWORD,
-//   database: process.env.DATABASE,
-//   port: Number(process.env.DBPORT || 5001),
-// });
-
-const pool = new Pool({connectionString: process.env.DEV_SPARK_SHADOW_DB})
+dotenv.config();
 
 // Create Express server new Express Instance
 const app = express();
 
+// Port to listen to
+const port = process.env.PORT || 5000;
+const uri = process.env.DB_URL || "";
+
 // Express configuration
-app.use(cors()); // Enable CORS
 app.use(helmet()); // Enable Helmet
 app.use(morgan("dev")); // Enable Morgan
 app.use(express.json()); // <=== Enable JSON body parser
+app.use(cookieParser());
+app.use(cors()); // Enable CORS
 
-// Connect PostgreSQL DB
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
+});
+
 (async () => {
-  const client = await pool.connect();
   try {
-    const response = await client.query("SELECT current_user");
-    const { rows } = response;
-    const currentUser = rows[0]["current_user"];
-    console.log(`🚀 ~ PostgreSql DB Connected by User: ${currentUser}`);
-  } catch (err) {
-    console.log(err);
+    // Connect the client to the server	(optional starting in v4.7)
+    await client.connect();
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
   } finally {
-    client.release();
+    // Ensures that the client will close when you finish/error
+    await client.close();
   }
 })();
 
@@ -51,6 +56,6 @@ const server = app.listen(port, () => {
   console.log(`🚀 ~ Server started at http://localhost:${port}`);
 });
 
-server.on('error', (err) => console.log(err.message));
+server.on("error", (err) => console.log(err.message));
 
 export default app;
