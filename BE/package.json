@@ -7,9 +7,9 @@
   "description": "ts node express inited/boiler",
   "main": "build/app.js",
   "scripts": {
-    "build": "npx tsc -p .",
+    "build": "tsc -p .",
+    "dev": "tsx watch --env-file=.env.dev --clear-screen=false src/app.ts | pino-pretty",
     "start": "node --env-file=.env.prod .",
-    "dev": "node --env-file=.env.dev --watch -r node-ts src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -33,7 +33,9 @@
     "mongodb": "^6.8.0",
     "morgan": "^1.10.0",
     "pg": "^8.11.3",
-    "prisma": "^5.16.1"
+    "pino-pretty": "^11.2.1",
+    "prisma": "^5.16.1",
+    "tsx": "^4.16.2"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.7",
