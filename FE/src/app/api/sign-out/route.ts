@@ -7,5 +7,5 @@ export const POST = () => {
 
   cookieStore.delete('isLoggedIn');
 
-  NextResponse.json<GlobalApiResponse>({ success: true, data: { message: 'Sign Out Successful', result: undefined } });
+  return NextResponse.json<GlobalApiResponse>({ success: true, data: { message: 'Sign Out Successful', result: undefined } });
 };

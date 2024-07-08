@@ -7,5 +7,5 @@ export const POST = () => {
 
   cookieStore.set('isLoggedIn', 'true');
 
-  NextResponse.json<GlobalApiResponse>({ success: true, data: { message: 'Sign In Successful', result: undefined } });
+  return NextResponse.json<GlobalApiResponse>({ success: true, data: { message: 'Sign In Successful', result: undefined } });
 };

@@ -1,3 +1,4 @@
+"use client";
 import { LOCAL_STORAGE_KEYS } from '@/constants/LOCAL_STORAGE_KEYS';
 import { GlobalApiResponse } from '@/types';
 import { apiRouter } from '@/utils/api-router';
@@ -29,10 +30,16 @@ const AuthProvider: React.FC<{
 
   const login = async (payload: { email: string; password: string }) => {
     // express login
-    const res1 = await apiRouter('SIGN_IN', {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    });
+    const res1 = await apiRouter(
+      'SIGN_IN',
+      {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      },
+      {
+        skipAuthorization: true,
+      }
+    );
     const { success: expressSuccess, data: expressData } = (await res1.json()) as GlobalApiResponse<UserInfoType>;
 
     if (!expressSuccess) {
