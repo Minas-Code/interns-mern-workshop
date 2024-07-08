@@ -10,7 +10,7 @@
 		"build": "tsc -p .",
 		"dev": "tsx watch --env-file=.env.dev --clear-screen=false src/app.ts | pino-pretty",
 		"local-start": "node --env-file=.env.prod .",
-		"start": "node src/app.ts",
+		"start": "yarn build && node src/app.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [
