@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { LOCAL_STORAGE_KEYS } from '@/constants/LOCAL_STORAGE_KEYS';
 import { GlobalApiResponse } from '@/types';
 import { apiRouter } from '@/utils/api-router';
@@ -59,6 +59,7 @@ const AuthProvider: React.FC<{
 
     localStorage.setItem(LOCAL_STORAGE_KEYS['IS_LOGGED_IN'], 'true');
     localStorage.setItem(LOCAL_STORAGE_KEYS['USER_INFO'], JSON.stringify(expressData.result));
+    localStorage.setItem(LOCAL_STORAGE_KEYS['TOKEN'], expressData.result.accessToken);
 
     return true;
   };

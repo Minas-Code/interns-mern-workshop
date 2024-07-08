@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cva } from 'class-variance-authority';
 import { GripVertical, MoreHorizontal, MoreVertical } from 'lucide-react';
-import { ColumnId } from './KanbanBoard';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,16 +15,20 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { PAGE_ROUTES } from '@/constants/API_ROUTES';
+import { ColumnId } from '@/types';
+import { Badge } from '../ui/badge';
 
 export interface Task {
   id: UniqueIdentifier;
   columnId: ColumnId;
   content: string;
+  title: string;
 }
 
 interface TaskCardProps {
   task: Task;
   isOverlay?: boolean;
+  deleteTask: (taskId: UniqueIdentifier) => void;
 }
 
 export type TaskType = 'Task';
@@ -35,7 +38,7 @@ export interface TaskDragData {
   task: Task;
 }
 
-export function TaskCard({ task, isOverlay }: TaskCardProps) {
+export function TaskCard({ task, isOverlay, deleteTask }: TaskCardProps) {
   const router = useRouter();
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
     id: task.id,
@@ -71,18 +74,20 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
       })}
     >
       <CardHeader className="px-3 py-3 space-between flex flex-row border-b-2 border-secondary relative">
-        <Button
-          variant={'ghost'}
-          {...attributes}
-          {...listeners}
-          className="p-1 text-secondary-foreground/50 -ml-2 h-auto cursor-grab"
-        >
-          <span className="sr-only">Move task</span>
-          <GripVertical />
-        </Button>
-        {/* <Badge variant={'outline'} className="ml-auto font-semibold">
-          Task
-        </Badge> */}
+        <section className="flex items-center">
+          <Button
+            variant={'ghost'}
+            {...attributes}
+            {...listeners}
+            className="p-1 text-secondary-foreground/50 -ml-2 h-auto cursor-grab"
+          >
+            <span className="sr-only">Move task</span>
+            <GripVertical />
+          </Button>
+          <Badge variant={'outline'} className="ml-auto capitalize font-semibold">
+            {task.title}
+          </Badge>
+        </section>
         <div className="ml-auto">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -99,12 +104,14 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
               >
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer">Delete</DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer" onClick={() => deleteTask(task.id)}>
+                Delete
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </CardHeader>
-      <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap">{task.content}</CardContent>
+      <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap break-all">{task.content}</CardContent>
     </Card>
   );
 }
