@@ -1,7 +1,6 @@
-import React from 'react';
-
+'use client';
 const ErrorView = () => {
-	return <div>ErrorView</div>;
+  return <div>ErrorView</div>;
 };
 
 export default ErrorView;
