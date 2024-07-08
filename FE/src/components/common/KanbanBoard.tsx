@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { BoardColumn, BoardContainer } from './BoardColumn';
@@ -131,20 +131,16 @@ export function KanbanBoard() {
           ))}
         </SortableContext>
       </BoardContainer>
-
-      {createPortal(
-        <DragOverlay>
-          {activeColumn && (
-            <BoardColumn
-              isOverlay
-              column={activeColumn}
-              tasks={tasks.filter((task) => task.columnId === activeColumn.id)}
-            />
-          )}
-          {activeTask && <TaskCard task={activeTask} isOverlay />}
-        </DragOverlay>,
-        document.body
-      )}
+      <DragOverlay>
+        {activeColumn && (
+          <BoardColumn
+            isOverlay
+            column={activeColumn}
+            tasks={tasks.filter((task) => task.columnId === activeColumn.id)}
+          />
+        )}
+        {activeTask && <TaskCard task={activeTask} isOverlay />}
+      </DragOverlay>
     </DndContext>
   );
 
