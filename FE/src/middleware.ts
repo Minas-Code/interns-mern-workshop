@@ -57,7 +57,6 @@ export function middleware(req: NextRequest) {
 
   // saving request origin in cookie
   if ([...PROTECTED_PAGE_ROUTES, ...PUBLIC_PAGE_ROUTES].includes(pageName)) {
-    console.log('INSIDE MIDDLEWARE');
     const searchParams = req.nextUrl.searchParams.size > 0 ? `?${req.nextUrl.searchParams.toString()}` : '';
     const res = NextResponse.json({});
 
@@ -74,7 +73,6 @@ export function middleware(req: NextRequest) {
 
     return NextResponse.next();
   }
-  console.log('OUTSIDE');
 
   return NextResponse.next({ status: 404, statusText: 'Not Found' });
 }
