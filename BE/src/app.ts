@@ -61,5 +61,5 @@ const server = app.listen(port, () => {
 
 server.on("error", (err) => console.log(err.message));
 
-app.use(errorHandler)
+app.use(errorHandler);
 export default app;

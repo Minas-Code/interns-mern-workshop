@@ -6,33 +6,29 @@ export class AuthController {
   public static async registerUser(
     req: Request,
     res: Response,
-    next: NextFunction
+    _: NextFunction
   ) {
     const authService = new AuthService();
     const respons = new ResponseWrapper(res);
-    return respons.ok(await authService.register(req.body));
+    return respons.created(await authService.register(req.body));
   }
 
-  public static async loginUser(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  public static async loginUser(req: Request, res: Response, _: NextFunction) {
     const { email, password } = req.body;
     const authService = new AuthService();
     const respons = new ResponseWrapper(res);
-    respons.ok(await authService.login({ email, password }));
+    return respons.ok(await authService.login({ email, password }));
   }
 
   public static async loggedInUser(
     req: Request,
     res: Response,
-    next: NextFunction
+    _: NextFunction
   ) {
     const { email, password } = req.body;
     const authService = new AuthService();
     const respons = new ResponseWrapper(res);
-    respons.ok(await authService.loggedInUser(req.user.id));
+    return respons.ok(await authService.loggedInUser(req.user.id));
   }
 }
 

@@ -23,12 +23,6 @@ authRouter.post(
   wrapper(AuthController.loginUser)
 );
 
-authRouter.get(
-  "/me",
-  isAuthorized,
-  wrapper(AuthController.loggedInUser)
-);
-
-
+authRouter.get("/me", isAuthorized, wrapper(AuthController.loggedInUser));
 
 export default authRouter;

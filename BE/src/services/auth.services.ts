@@ -90,9 +90,9 @@ export class AuthService {
       }
       const user = await prisma.user.findUnique({
         where: { id: userId },
-        include:{
-          Todo:true
-        }
+        include: {
+          Todo: true,
+        },
       });
       const userData = omit(user, ["password"]);
       return {
@@ -110,6 +110,4 @@ export class AuthService {
       };
     }
   }
-  
 }
-

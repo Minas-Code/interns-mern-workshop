@@ -7,7 +7,7 @@ export class TodoController {
   public static async index(
     req: customRequest,
     res: Response,
-    next: NextFunction
+    _: NextFunction
   ) {
     const todoService = new TodoService();
     const respons = new ResponseWrapper(res);
@@ -17,7 +17,7 @@ export class TodoController {
   public static async todoById(
     req: customRequest,
     res: Response,
-    next: NextFunction
+    _: NextFunction
   ) {
     const todoService = new TodoService();
     const respons = new ResponseWrapper(res);
@@ -27,7 +27,7 @@ export class TodoController {
   public static async updateTodoById(
     req: customRequest,
     res: Response,
-    next: NextFunction
+    _: NextFunction
   ) {
     const id = parseInt(req.params.id);
     const respons = new ResponseWrapper(res);
@@ -42,18 +42,18 @@ export class TodoController {
   public static async create(
     req: customRequest,
     res: Response,
-    next: NextFunction
+    _: NextFunction
   ) {
     const respons = new ResponseWrapper(res);
     const todoService = new TodoService();
     const updated = await todoService.createTodo(req.user.id, req.body);
-    return respons.ok(updated);
+    return respons.created(updated);
   }
 
   public static async destroy(
     req: customRequest,
     res: Response,
-    next: NextFunction
+    _: NextFunction
   ) {
     const todoService = new TodoService();
     const respons = new ResponseWrapper(res);

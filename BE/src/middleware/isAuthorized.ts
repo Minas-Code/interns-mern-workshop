@@ -2,7 +2,11 @@ import { get } from "lodash";
 import { Request, Response, NextFunction } from "express";
 import { PrismaClient } from "@prisma/client";
 
-const isAuthorized = async (req: Request, res: Response, next: NextFunction) => {
+const isAuthorized = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const user: any = get(req, "user");
     if (!user) {
