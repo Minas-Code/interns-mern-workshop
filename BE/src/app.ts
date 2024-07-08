@@ -51,7 +51,7 @@ const client = new MongoClient(uri, {
 app.use(deserializeUser);
 
 // Use routes
-app.use("/", router);
+app.use("/api", router);
 
 // Start Express server
 const server = app.listen(port, () => {

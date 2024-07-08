@@ -1,7 +1,8 @@
+"use client";
 import { LOCAL_STORAGE_KEYS } from '@/constants/LOCAL_STORAGE_KEYS';
 import { GlobalApiResponse } from '@/types';
 import { apiRouter } from '@/utils/api-router';
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 type UserInfoType = {
   accessToken: string;
@@ -12,16 +13,16 @@ type UserInfoType = {
 const AuthContext = createContext<{
   isLoggedIn: boolean;
   userInfo?: UserInfoType;
-  login: (payload: { email: string; password: string }) => void;
+  login: (payload: { email: string; password: string }) => Promise<boolean>;
   logout: () => void;
 }>({
   isLoggedIn: false,
-  login: () => {},
+  login: async () => false,
   logout: () => {},
 });
 
 // Auth provider component
-export const AuthProvider: React.FC<{
+const AuthProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -29,15 +30,20 @@ export const AuthProvider: React.FC<{
 
   const login = async (payload: { email: string; password: string }) => {
     // express login
-    const res1 = await apiRouter('SIGN_IN', {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    });
+    const res1 = await apiRouter(
+      'SIGN_IN',
+      {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      },
+      {
+        skipAuthorization: true,
+      }
+    );
     const { success: expressSuccess, data: expressData } = (await res1.json()) as GlobalApiResponse<UserInfoType>;
 
     if (!expressSuccess) {
-      alert(expressData.message);
-      return;
+      return false;
     }
 
     // next login
@@ -45,8 +51,7 @@ export const AuthProvider: React.FC<{
     const { success: nextSuccess, data: nextData } = (await res2.json()) as GlobalApiResponse<undefined>;
 
     if (!nextSuccess) {
-      alert(nextData.message);
-      return;
+      return false;
     }
 
     setIsLoggedIn(true);
@@ -54,6 +59,8 @@ export const AuthProvider: React.FC<{
 
     localStorage.setItem(LOCAL_STORAGE_KEYS['IS_LOGGED_IN'], 'true');
     localStorage.setItem(LOCAL_STORAGE_KEYS['USER_INFO'], JSON.stringify(expressData.result));
+
+    return true;
   };
 
   const logout = async () => {
@@ -87,4 +94,14 @@ export const AuthProvider: React.FC<{
   return <AuthContext.Provider value={{ isLoggedIn, login, logout, userInfo }}>{children}</AuthContext.Provider>;
 };
 
-export default AuthContext;
+const useAuthContext = () => {
+  const context = useContext(AuthContext);
+
+  if (context === undefined) {
+    throw new Error('useAuthContext must be used within a FirebaseProvider');
+  }
+
+  return context;
+};
+
+export { useAuthContext, AuthProvider };

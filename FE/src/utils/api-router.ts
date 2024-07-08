@@ -19,7 +19,8 @@ export const apiRouter = async (
     headers.set('credentials', 'include');
   }
 
-  const response = await fetch(!options?.skipBaseUrl ? BE_BASE_URL : '' + API_ROUTES[input], { ...init, headers });
+  
+  const response = await fetch((!options?.skipBaseUrl ? BE_BASE_URL : '') + API_ROUTES[input], { ...init, headers });
 
   // handle 401 error
   if (response.status === 401) {

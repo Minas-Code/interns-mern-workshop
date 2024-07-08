@@ -1,6 +1,6 @@
 import { get } from "lodash";
 import { Request, Response, NextFunction } from "express";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../clients/prisma.client";
 
 const isAuthorized = async (
   req: Request,
@@ -10,14 +10,13 @@ const isAuthorized = async (
   try {
     const user = get(req, "user");
     if (!user) {
-      throw new Error("Auth access_token not found");
+      throw new Error("Auth token not found");
     }
-    const prisma = new PrismaClient();
     const checkUser = await prisma.user.findUnique({
       where: { email: user.email },
     });
     if (!checkUser) {
-      throw new Error("User not found");
+      throw new Error("you are not authorized");
     }
     req.user = checkUser;
     return next();
