@@ -1,10 +1,15 @@
 import { get } from "lodash";
 import { verify } from "../helpers/jwt";
-import { Response, NextFunction } from "express";
-import { customRequest } from "../types/cutomDefinition";
+import { Response, NextFunction, RequestHandler, Request } from "express";
 
-const deserializeUser = async (
-  req: customRequest,
+declare module "express-serve-static-core" {
+  interface Request {
+    user?: any;
+  }
+}
+
+const deserializeUser: RequestHandler = async (
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
@@ -15,13 +20,13 @@ const deserializeUser = async (
   }
   if (!bToken) return next();
 
-  const { decoded, expired, valid, msg: errorMsg } = verify(bToken);
+  const { decoded, expired, valid, msg: errorMsg } = verify(bToken || "");
 
   if (valid && !expired) {
     req.user = decoded;
     return next();
   } else {
-    return res.status(403).json({
+    res.status(403).json({
       success: false,
       data: { message: errorMsg },
     });

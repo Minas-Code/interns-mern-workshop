@@ -11,7 +11,7 @@ export class TodoController {
   ) {
     const todoService = new TodoService();
     const respons = new ResponseWrapper(res);
-    return respons.ok(await todoService.getTodosByUserId(req.params.userId));
+    return respons.ok(await todoService.getTodosByUserId(req.user.id));
   }
 
   public static async todoById(
@@ -21,7 +21,7 @@ export class TodoController {
   ) {
     const todoService = new TodoService();
     const respons = new ResponseWrapper(res);
-    return respons.ok(await todoService.deleteTodoById(req.params.id));
+    return respons.ok(await todoService.getTodosById(req.params.id));
   }
 
   public static async updateTodoById(
@@ -32,14 +32,28 @@ export class TodoController {
     const id = parseInt(req.params.id);
     const respons = new ResponseWrapper(res);
     const todoService = new TodoService();
-    const updated = await todoService.updateTodoById(req.params.id, req.body);
+    const updated = await todoService.updateTodoById(req.params.id, {
+      ...req.body,
+      userId: req.user.id,
+    });
+    return respons.ok(updated);
+  }
+
+  public static async create(
+    req: customRequest,
+    res: Response,
+    next: NextFunction
+  ) {
+    const respons = new ResponseWrapper(res);
+    const todoService = new TodoService();
+    const updated = await todoService.createTodo(req.user.id, req.body);
     return respons.ok(updated);
   }
 
   public static async destroy(
     req: customRequest,
     res: Response,
-    // next: NextFunction
+    next: NextFunction
   ) {
     const todoService = new TodoService();
     const respons = new ResponseWrapper(res);
