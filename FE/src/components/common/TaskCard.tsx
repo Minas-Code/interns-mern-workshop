@@ -4,9 +4,18 @@ import { CSS } from '@dnd-kit/utilities';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cva } from 'class-variance-authority';
-import { GripVertical } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { GripVertical, MoreHorizontal, MoreVertical } from 'lucide-react';
 import { ColumnId } from './KanbanBoard';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { PAGE_ROUTES } from '@/constants/API_ROUTES';
 
 export interface Task {
   id: UniqueIdentifier;
@@ -27,6 +36,7 @@ export interface TaskDragData {
 }
 
 export function TaskCard({ task, isOverlay }: TaskCardProps) {
+  const router = useRouter();
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
     id: task.id,
     data: {
@@ -70,9 +80,29 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
           <span className="sr-only">Move task</span>
           <GripVertical />
         </Button>
-        <Badge variant={'outline'} className="ml-auto font-semibold">
+        {/* <Badge variant={'outline'} className="ml-auto font-semibold">
           Task
-        </Badge>
+        </Badge> */}
+        <div className="ml-auto">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button aria-haspopup="true" size="icon" variant="ghost">
+                <MoreVertical className="h-4 w-4" />
+                <span className="sr-only">Toggle menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => router.push(`${PAGE_ROUTES.TODOS_CREATE}?taskId=${task.id}`)}
+              >
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">Delete</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </CardHeader>
       <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap">{task.content}</CardContent>
     </Card>

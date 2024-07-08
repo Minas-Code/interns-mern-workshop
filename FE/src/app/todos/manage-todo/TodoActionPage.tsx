@@ -26,11 +26,7 @@ const TodoActionPage = () => {
     },
     resolver: zodResolver(createTaskSchema),
   });
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = form;
+  const { handleSubmit } = form;
   const onSubmit = (data: CreateTaskSchemaType) => console.log(data);
   return (
     <section className="flex flex-col justify-center items-center h-screen gap-8">
@@ -65,7 +61,7 @@ const TodoActionPage = () => {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Task Description</FormLabel>
+                      <FormLabel>Description</FormLabel>
                       <FormControl>
                         <Textarea className="w-full" {...field} />
                       </FormControl>

@@ -1,24 +1,19 @@
 import { KanbanBoard } from '@/components/common/KanbanBoard';
 import { Button } from '@/components/ui/button';
+import { PAGE_ROUTES } from '@/constants/API_ROUTES';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 const TodoListPage = () => {
+  const router = useRouter();
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="flex justify-between w-full flex-row p-4">
-        <Button variant="link" asChild className="text-primary h-8 w-8 p-0">
-          <a href="https://github.com/Georgegriff/react-dnd-kit-tailwind-shadcn-ui"></a>
-        </Button>
-        <Button variant="link" asChild className="text-primary h-16 w-16"></Button>
-        {/* <ThemeToggle /> */}
-      </header>
-      <main className="mx-4 flex flex-col gap-6">
-        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-          Mern Stack Workshop Todo List
-        </h1>
-        <KanbanBoard />
-      </main>
-    </div>
+    <section className="min-h-screen flex gap-4 flex-col">
+      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Mern Stack Workshop Todo List</h1>
+      <div className="justify-end flex">
+        <Button onClick={() => router.push(PAGE_ROUTES.TODOS_CREATE)}>Add task</Button>
+      </div>
+      <KanbanBoard />
+    </section>
   );
 };
 

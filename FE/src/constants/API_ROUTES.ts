@@ -1,8 +1,7 @@
 export enum PAGE_ROUTES {
   BASE = '/',
   TODOS_LIST = '/todos/list',
-  TODOS_CREATE = '/todos/create',
-  TODOS_EDIT = '/todos/edit',
+  TODOS_CREATE = '/todos/manage-todo',
   SIGN_IN = '/sign-in',
   SIGN_UP = '/sign-up',
   NOT_FOUND = '/404',
