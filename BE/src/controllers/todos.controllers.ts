@@ -1,11 +1,10 @@
-import { NextFunction, Response } from "express";
-import { customRequest } from "../types/cutomDefinition";
+import { NextFunction, Response ,Request} from "express";
 import { ResponseWrapper } from "../helpers/response_wrapper";
 import { TodoService } from "../services/todo.services";
 
 export class TodoController {
   public static async index(
-    req: customRequest,
+    req: Request,
     res: Response,
     _: NextFunction
   ) {
@@ -15,7 +14,7 @@ export class TodoController {
   }
 
   public static async todoById(
-    req: customRequest,
+    req: Request,
     res: Response,
     _: NextFunction
   ) {
@@ -25,7 +24,7 @@ export class TodoController {
   }
 
   public static async updateTodoById(
-    req: customRequest,
+    req: Request,
     res: Response,
     _: NextFunction
   ) {
@@ -40,7 +39,7 @@ export class TodoController {
   }
 
   public static async create(
-    req: customRequest,
+    req: Request,
     res: Response,
     _: NextFunction
   ) {
@@ -51,7 +50,7 @@ export class TodoController {
   }
 
   public static async destroy(
-    req: customRequest,
+    req: Request,
     res: Response,
     _: NextFunction
   ) {

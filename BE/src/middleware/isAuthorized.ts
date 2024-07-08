@@ -8,7 +8,7 @@ const isAuthorized = async (
   next: NextFunction
 ) => {
   try {
-    const user: any = get(req, "user");
+    const user = get(req, "user");
     if (!user) {
       throw new Error("Auth access_token not found");
     }
@@ -16,6 +16,9 @@ const isAuthorized = async (
     const checkUser = await prisma.user.findUnique({
       where: { email: user.email },
     });
+    if (!checkUser) {
+      throw new Error("User not found");
+    }
     req.user = checkUser;
     return next();
   } catch (e) {

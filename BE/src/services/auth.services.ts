@@ -1,5 +1,5 @@
 // todo.service.ts
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { compareSync, encryptSync } from "../helpers/encrypt";
 import { omit } from "lodash";
 import { sign } from "../helpers/jwt";
@@ -27,11 +27,11 @@ export class AuthService {
         where: { email: payload.email },
       });
       if (!user) {
-        throw new Error("User not found");
+        throw new Error("Email or password is incorrect");
       }
       const validPassword = compareSync(payload.password, user.password);
       if (!validPassword) {
-        throw new Error("Password is incorrect");
+        throw new Error("Email or password is incorrect");
       }
       const userData = omit(user, ["password"]);
       const accessToken = sign({ ...userData });

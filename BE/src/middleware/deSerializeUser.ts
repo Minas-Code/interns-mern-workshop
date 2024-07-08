@@ -1,10 +1,11 @@
 import { get } from "lodash";
 import { verify } from "../helpers/jwt";
 import { Response, NextFunction, RequestHandler, Request } from "express";
+import { User } from "@prisma/client";
 
 declare module "express-serve-static-core" {
   interface Request {
-    user?: any;
+    user: User;
   }
 }
 
@@ -22,8 +23,8 @@ const deserializeUser: RequestHandler = async (
 
   const { decoded, expired, valid, msg: errorMsg } = verify(bToken || "");
 
-  if (valid && !expired) {
-    req.user = decoded;
+  if (valid && !expired && decoded) {
+    req.user = decoded as User; 
     return next();
   } else {
     res.status(403).json({
