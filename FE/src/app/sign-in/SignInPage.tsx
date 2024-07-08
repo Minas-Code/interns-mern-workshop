@@ -7,10 +7,9 @@ import { LoaderCircle } from 'lucide-react';
 import { loginFormSchema, loginFormType } from './types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { API_ROUTES, PAGE_ROUTES } from '@/constants/API_ROUTES';
+import { PAGE_ROUTES } from '@/constants/API_ROUTES';
 import { useState } from 'react';
 import Link from 'next/link';
-import { apiRouter } from '@/utils/api-router';
 import { useAuthContext } from '@/components/context/AuthContext';
 import { useRouter } from 'next/navigation';
 
@@ -22,7 +21,7 @@ export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const { login } = useAuthContext();
-  const router = useRouter()
+  const router = useRouter();
 
   const methods = useForm<loginFormType>({
     defaultValues,
@@ -40,12 +39,8 @@ export default function SignInPage() {
     setIsLoading(true);
     login(values).then((res) => {
       setIsLoading(false);
-      if (res) {
-        
-      } else {
-        setIsError(true);
-      }
-      router.replace(PAGE_ROUTES.TODOS_LIST);
+      res && router.replace(PAGE_ROUTES.TODOS_LIST);
+      !res && setIsError(true);
     });
   };
 
@@ -75,11 +70,7 @@ export default function SignInPage() {
           </CardContent>
           <CardFooter>
             <div className="w-full">
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isLoading}
-              >
+              <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading && <LoaderCircle className="animate-spin" />}
 
                 <span className="ml-2">Sign in</span>
