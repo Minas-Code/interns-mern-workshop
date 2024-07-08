@@ -50,8 +50,11 @@ const TodoListPage = () => {
   };
   return (
     <section className="min-h-screen flex gap-4 flex-col">
-      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Mern Stack Workshop Todo List</h1>
-      <div className="justify-end flex">
+      <div className="justify-between items-center flex">
+        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+          Mern Stack Workshop Todo List
+        </h1>
+
         <Button onClick={() => router.push(PAGE_ROUTES.TODOS_CREATE)}>Add task</Button>
       </div>
       <KanbanBoard todoList={tasksList} deleteTask={handleDeleteTask} />
