@@ -1,0 +1,5 @@
+export const LOCAL_STORAGE_KEYS = {
+  TOKEN: 'TOKEN',
+  USER_INFO: 'USER_INFO',
+  IS_LOGGED_IN: 'IS_LOGGED_IN',
+};
