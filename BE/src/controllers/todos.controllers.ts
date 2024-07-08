@@ -1,45 +1,58 @@
-import { NextFunction, Response } from "express";
-import { customRequest } from "../types/cutomDefinition";
+import { NextFunction, Response ,Request} from "express";
 import { ResponseWrapper } from "../helpers/response_wrapper";
 import { TodoService } from "../services/todo.services";
 
 export class TodoController {
   public static async index(
-    req: customRequest,
+    req: Request,
     res: Response,
-    next: NextFunction
+    _: NextFunction
   ) {
     const todoService = new TodoService();
     const respons = new ResponseWrapper(res);
-    return respons.ok(await todoService.getTodosByUserId(req.params.userId));
+    return respons.ok(await todoService.getTodosByUserId(req.user.id));
   }
 
   public static async todoById(
-    req: customRequest,
+    req: Request,
     res: Response,
-    next: NextFunction
+    _: NextFunction
   ) {
     const todoService = new TodoService();
     const respons = new ResponseWrapper(res);
-    return respons.ok(await todoService.deleteTodoById(req.params.id));
+    return respons.ok(await todoService.getTodosById(req.params.id));
   }
 
   public static async updateTodoById(
-    req: customRequest,
+    req: Request,
     res: Response,
-    next: NextFunction
+    _: NextFunction
   ) {
     const id = parseInt(req.params.id);
     const respons = new ResponseWrapper(res);
     const todoService = new TodoService();
-    const updated = await todoService.updateTodoById(req.params.id, req.body);
+    const updated = await todoService.updateTodoById(req.params.id, {
+      ...req.body,
+      userId: req.user.id,
+    });
     return respons.ok(updated);
   }
 
-  public static async destroy(
-    req: customRequest,
+  public static async create(
+    req: Request,
     res: Response,
-    // next: NextFunction
+    _: NextFunction
+  ) {
+    const respons = new ResponseWrapper(res);
+    const todoService = new TodoService();
+    const updated = await todoService.createTodo(req.user.id, req.body);
+    return respons.created(updated);
+  }
+
+  public static async destroy(
+    req: Request,
+    res: Response,
+    _: NextFunction
   ) {
     const todoService = new TodoService();
     const respons = new ResponseWrapper(res);

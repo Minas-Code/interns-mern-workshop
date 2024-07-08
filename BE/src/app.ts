@@ -6,6 +6,8 @@ import router from "./routes";
 import dotenv from "dotenv";
 import { MongoClient, ServerApiVersion } from "mongodb";
 import cookieParser from "cookie-parser";
+import deserializeUser from "./middleware/deSerializeUser";
+import { errorHandler } from "./middleware/errorHandler";
 
 dotenv.config();
 
@@ -46,6 +48,7 @@ const client = new MongoClient(uri, {
     await client.close();
   }
 })();
+app.use(deserializeUser);
 
 // Use routes
 app.use("/", router);
@@ -58,4 +61,5 @@ const server = app.listen(port, () => {
 
 server.on("error", (err) => console.log(err.message));
 
+app.use(errorHandler);
 export default app;

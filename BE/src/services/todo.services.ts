@@ -1,33 +1,27 @@
 // todo.service.ts
-import { PrismaClient } from "@prisma/client";
-// import { TodoInput, TodoOutput, TodoResponse } from './types';
+import { Todo } from "@prisma/client";
+import { ObjectId } from "mongodb";
+import { prisma } from "../clients/prisma.client";
 
 // types.d.ts
-export interface TodoInput {
-  title: string;
-  description?: string;
-  completed?: boolean;
-  userId: string;
-}
 
-export interface TodoOutput extends TodoInput {
-  id: string;
-}
+type TodoInputType = Omit<Todo, "id" | "createdAt" | "updatedAt">;
 
 export interface TodoServiceResponse {
   success: boolean;
   data: {
     message: string;
-    result?: TodoOutput | TodoOutput[];
+    result?: Todo | Todo[];
   };
 }
-
-const prisma = new PrismaClient();
 
 export class TodoService {
   public async getTodosByUserId(userId: string): Promise<TodoServiceResponse> {
     try {
-      const todos: TodoOutput[] = await prisma.todo.findMany({
+      if (!ObjectId.isValid(userId)) {
+        throw new Error("Invalid ID");
+      }
+      const todos: Todo[] = await prisma.todo.findMany({
         where: { userId },
       });
       return {
@@ -45,14 +39,49 @@ export class TodoService {
       };
     }
   }
+  public async getTodosById(id: string): Promise<TodoServiceResponse> {
+    try {
+      if (!ObjectId.isValid(id)) {
+        throw new Error("Invalid ID");
+      }
+      const todo = await prisma.todo.findUnique({
+        where: { id },
+      });
+      if (!todo) {
+        throw new Error("Todo not found");
+      }
+      return {
+        success: true,
+        data: {
+          message: "Todos retrieved successfully",
+          result: todo,
+        },
+      };
+    } catch (e) {
+      const error = e as Error;
+      return {
+        success: false,
+        data: { message: error.message },
+      };
+    }
+  }
 
   public async createTodo(
     userId: string,
-    payload: TodoInput
+    payload: TodoInputType
   ): Promise<TodoServiceResponse> {
     try {
-      const todo: TodoOutput = await prisma.todo.create({
-        data: payload,
+      const todo: Todo = await prisma.todo.create({
+        data: {
+          title: payload.title,
+          description: payload.description,
+          status: payload.status,
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+        },
       });
       return {
         success: true,
@@ -72,9 +101,12 @@ export class TodoService {
 
   public async updateTodoById(
     id: string,
-    payload: Partial<TodoInput>
+    payload: Partial<TodoInputType>
   ): Promise<TodoServiceResponse> {
     try {
+      if (!ObjectId.isValid(id)) {
+        throw new Error("Invalid ID");
+      }
       const existingTodo = await prisma.todo.findUnique({
         where: { id },
       });
@@ -103,6 +135,9 @@ export class TodoService {
 
   public async deleteTodoById(id: string): Promise<TodoServiceResponse> {
     try {
+      if (!ObjectId.isValid(id)) {
+        throw new Error("Invalid ID");
+      }
       const existingTodo = await prisma.todo.findUnique({
         where: { id },
       });
