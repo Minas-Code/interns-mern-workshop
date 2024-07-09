@@ -9,7 +9,7 @@
 	"scripts": {
 		"build": "tsc -p .",
 		"dev": "tsx watch --env-file=.env.dev --clear-screen=false src/app.ts | pino-pretty",
-		"start": "node --env-file=.env.prod .",
+		"start": "node .",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [
