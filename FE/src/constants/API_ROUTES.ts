@@ -10,7 +10,7 @@ export enum PAGE_ROUTES {
 export enum API_ROUTES {
   SIGN_IN = '/auth/login',
   SIGN_UP = '/auth/register',
-  SIGN_OUT = '/sign-out',
+  SIGN_OUT = '/api/sign-out',
   GET_TODOS = '/todo',
   CREATE_TODO = '/todo',
   DELETE_TODO = '/todo',

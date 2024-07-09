@@ -48,7 +48,7 @@ const AuthProvider: React.FC<{
 
     // next login
     const res2 = await apiRouter('SIGN_IN', { method: 'POST' }, { skipAuthorization: true, skipBaseUrl: true });
-    const { success: nextSuccess, data: nextData } = (await res2.json()) as GlobalApiResponse<undefined>;
+    const { success: nextSuccess } = (await res2.json()) as GlobalApiResponse<undefined>;
 
     if (!nextSuccess) {
       return false;
