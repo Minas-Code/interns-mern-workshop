@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/text-area';
+import { useToast } from '@/components/ui/use-toast';
 import { PAGE_ROUTES } from '@/constants/API_ROUTES';
 import { TodoStatus } from '@/lib/enum';
 import { createTaskSchema, CreateTaskSchemaType } from '@/lib/schema';
@@ -28,6 +29,8 @@ const TodoActionPage = () => {
   const params = useSearchParams();
   const taskId = params.get('taskId');
   const router = useRouter();
+  const { toast } = useToast();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<CreateTaskSchemaType>({
@@ -44,9 +47,18 @@ const TodoActionPage = () => {
         method: 'POST',
         body: JSON.stringify(data),
       });
+      toast({
+        title: 'Success',
+        description: 'Task created Successfully',
+        duration: 1000,
+      });
       router.replace(PAGE_ROUTES.TODOS_LIST);
     } catch (error) {
-      alert('Task Creation failed');
+      toast({
+        title: 'Error',
+        description: 'Task creation failed',
+        duration: 1000,
+      });
       setIsLoading(false);
     }
   };
@@ -57,9 +69,18 @@ const TodoActionPage = () => {
         routeParam: taskId || '',
         body: JSON.stringify(data),
       });
+      toast({
+        title: 'Success',
+        description: 'Task Updated Successfully',
+        duration: 1000,
+      });
       router.replace(PAGE_ROUTES.TODOS_LIST);
     } catch (error) {
-      alert('Task updation failed');
+      toast({
+        title: 'Success',
+        description: 'Task updation failed',
+        duration: 1000,
+      });
       setIsLoading(false);
     }
   };
@@ -94,7 +115,7 @@ const TodoActionPage = () => {
   }, [taskId]);
 
   return (
-    <section className="flex flex-col justify-center items-center h-screen gap-8">
+    <section className="flex flex-col justify-center items-center  gap-8">
       <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Card className="w-full max-w-[52rem] min-w-[50rem]">

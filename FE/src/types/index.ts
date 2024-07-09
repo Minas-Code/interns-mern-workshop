@@ -16,7 +16,7 @@ export interface Column {
 export const defaultCols = [
   {
     id: 'PENDING' as const,
-    title: 'Todo',
+    title: 'Pending',
   },
   {
     id: 'IN_PROGRESS' as const,
@@ -24,7 +24,7 @@ export const defaultCols = [
   },
   {
     id: 'COMPLETED' as const,
-    title: 'Done',
+    title: 'Completed',
   },
 ] satisfies Column[];
 

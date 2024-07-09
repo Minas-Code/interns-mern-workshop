@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 
 import { BoardColumn, BoardContainer } from './BoardColumn';
 import {
@@ -113,7 +112,6 @@ export function KanbanBoard({
       const activeColumnIndex = columns.findIndex((col) => col.id === activeId);
 
       const overColumnIndex = columns.findIndex((col) => col.id === overId);
-
       return arrayMove(columns, activeColumnIndex, overColumnIndex);
     });
   }
