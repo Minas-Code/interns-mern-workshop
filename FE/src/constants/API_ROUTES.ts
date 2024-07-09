@@ -8,14 +8,14 @@ export enum PAGE_ROUTES {
 }
 
 export enum API_ROUTES {
-  SIGN_IN = '/auth/login',
-  SIGN_UP = '/auth/register',
+  SIGN_IN = '/api/auth/login',
+  SIGN_UP = '/api/auth/register',
   SIGN_OUT = '/api/sign-out',
-  GET_TODOS = '/todo',
-  CREATE_TODO = '/todo',
-  DELETE_TODO = '/todo',
-  UPDATE_TODO = '/update-todo',
-  ME = '/auth/me',
+  GET_TODOS = '/api/todo',
+  CREATE_TODO = '/api/todo',
+  DELETE_TODO = '/api/todo',
+  UPDATE_TODO = '/api/update-todo',
+  ME = '/api/auth/me',
 }
 
 export const BE_BASE_URL = process.env.NEXT_PUBLIC_BE_BASE_URL || 'http://localhost:3000/api/v1';
