@@ -9,15 +9,15 @@ export class AuthController {
     _: NextFunction
   ) {
     const authService = new AuthService();
-    const respons = new ResponseWrapper(res);
-    return respons.created(await authService.register(req.body));
+    const response = new ResponseWrapper(res);
+    return response.created(await authService.register(req.body));
   }
 
   public static async loginUser(req: Request, res: Response, _: NextFunction) {
     const { email, password } = req.body;
     const authService = new AuthService();
-    const respons = new ResponseWrapper(res);
-    return respons.ok(await authService.login({ email, password }));
+    const response = new ResponseWrapper(res);
+    return response.ok(await authService.login({ email, password }));
   }
 
   public static async loggedInUser(
@@ -25,10 +25,9 @@ export class AuthController {
     res: Response,
     _: NextFunction
   ) {
-    const { email, password } = req.body;
     const authService = new AuthService();
-    const respons = new ResponseWrapper(res);
-    return respons.ok(await authService.loggedInUser(req.user.id));
+    const response = new ResponseWrapper(res);
+    return response.ok(await authService.loggedInUser(req.user.id));
   }
 }
 
