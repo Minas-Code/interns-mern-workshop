@@ -9,8 +9,8 @@ export class TodoController {
     _: NextFunction
   ) {
     const todoService = new TodoService();
-    const respons = new ResponseWrapper(res);
-    return respons.ok(await todoService.getTodosByUserId(req.user.id));
+    const response = new ResponseWrapper(res);
+    return response.ok(await todoService.getTodosByUserId(req.user.id));
   }
 
   public static async todoById(
@@ -19,8 +19,8 @@ export class TodoController {
     _: NextFunction
   ) {
     const todoService = new TodoService();
-    const respons = new ResponseWrapper(res);
-    return respons.ok(await todoService.getTodosById(req.params.id));
+    const response = new ResponseWrapper(res);
+    return response.ok(await todoService.getTodosById(req.params.id));
   }
 
   public static async updateTodoById(
@@ -29,13 +29,13 @@ export class TodoController {
     _: NextFunction
   ) {
     const id = parseInt(req.params.id);
-    const respons = new ResponseWrapper(res);
+    const response = new ResponseWrapper(res);
     const todoService = new TodoService();
     const updated = await todoService.updateTodoById(req.params.id, {
       ...req.body,
       userId: req.user.id,
     });
-    return respons.ok(updated);
+    return response.ok(updated);
   }
 
   public static async create(
@@ -43,10 +43,10 @@ export class TodoController {
     res: Response,
     _: NextFunction
   ) {
-    const respons = new ResponseWrapper(res);
+    const response = new ResponseWrapper(res);
     const todoService = new TodoService();
     const updated = await todoService.createTodo(req.user.id, req.body);
-    return respons.created(updated);
+    return response.created(updated);
   }
 
   public static async destroy(
@@ -55,7 +55,7 @@ export class TodoController {
     _: NextFunction
   ) {
     const todoService = new TodoService();
-    const respons = new ResponseWrapper(res);
-    return respons.ok(await todoService.deleteTodoById(req.params.id));
+    const response = new ResponseWrapper(res);
+    return response.ok(await todoService.deleteTodoById(req.params.id));
   }
 }
