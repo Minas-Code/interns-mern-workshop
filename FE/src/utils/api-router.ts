@@ -33,7 +33,7 @@ export const apiRouter = async (
 
   // handle 401 error
   if (response.status === 401) {
-    alert('Unauthorized');
+    console.log('Unauthorized');
     await fetch(API_ROUTES.SIGN_OUT, { ...init, headers });
 
     localStorage.clear();

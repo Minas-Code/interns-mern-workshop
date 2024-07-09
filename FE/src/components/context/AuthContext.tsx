@@ -68,7 +68,7 @@ const AuthProvider: React.FC<{
     const res = await apiRouter('SIGN_OUT', { method: 'POST' }, { skipAuthorization: true, skipBaseUrl: true });
 
     if (!res.ok) {
-      alert('Logout failed');
+      console.log('Logout failed');
       return;
     }
 

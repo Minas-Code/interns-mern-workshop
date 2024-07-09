@@ -44,10 +44,6 @@ export default function SignInPage() {
     });
   };
 
-  useEffect(() => {
-    console.log('env', process.env.NEXT_PUBLIC_BE_BASE_URL);
-  }, []);
-
   return (
     <section className="flex flex-col justify-center items-center h-screen gap-8">
       <h1 className="text-3xl font-extrabold"></h1>
