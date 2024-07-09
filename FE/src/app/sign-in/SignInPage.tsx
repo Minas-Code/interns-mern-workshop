@@ -8,7 +8,7 @@ import { loginFormSchema, loginFormType } from './types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PAGE_ROUTES } from '@/constants/API_ROUTES';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuthContext } from '@/components/context/AuthContext';
 import { useRouter } from 'next/navigation';
@@ -43,6 +43,10 @@ export default function SignInPage() {
       !res && setIsError(true);
     });
   };
+
+  useEffect(() => {
+    console.log('env', process.env.NEXT_PUBLIC_BE_BASE_URL);
+  }, []);
 
   return (
     <section className="flex flex-col justify-center items-center h-screen gap-8">
