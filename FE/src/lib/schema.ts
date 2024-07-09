@@ -1,11 +1,15 @@
 import { z } from 'zod';
 import { TodoStatus } from './enum';
-
+const displayToEnum = {
+  Pending: 'PENDING',
+  'In Progress': 'IN_PROGRESS',
+  Completed: 'COMPLETED',
+};
 export const createTaskSchema = z
   .object({
-    title: z.string().min(1, 'Title is required'),
+    title: z.string().min(1, 'Title is required').max(10, 'Title is too long'),
     description: z.string().min(1, 'Description is required'),
-    status: z.nativeEnum(TodoStatus).default(TodoStatus.PENDING),
+    status: z.enum(['Pending', 'In Progress', 'Completed']).transform((val) => displayToEnum[val]),
   })
   .required();
 

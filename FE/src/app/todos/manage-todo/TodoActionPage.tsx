@@ -13,32 +13,93 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/text-area';
+import { PAGE_ROUTES } from '@/constants/API_ROUTES';
 import { TodoStatus } from '@/lib/enum';
 import { createTaskSchema, CreateTaskSchemaType } from '@/lib/schema';
+import { GlobalApiResponse, TodoList } from '@/types';
+import { apiRouter } from '@/utils/api-router';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
+import { LoaderCircle } from 'lucide-react';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 const TodoActionPage = () => {
+  const params = useSearchParams();
+  const taskId = params.get('taskId');
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<CreateTaskSchemaType>({
     defaultValues: {
       status: TodoStatus.PENDING,
     },
     resolver: zodResolver(createTaskSchema),
   });
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = form;
-  const onSubmit = (data: CreateTaskSchemaType) => console.log(data);
+  const { handleSubmit } = form;
+
+  const createTask = async (data: CreateTaskSchemaType) => {
+    try {
+      await apiRouter('CREATE_TODO', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+      router.replace(PAGE_ROUTES.TODOS_LIST);
+    } catch (error) {
+      alert('Task Creation failed');
+      setIsLoading(false);
+    }
+  };
+  const updateTask = async (data: CreateTaskSchemaType) => {
+    try {
+      await apiRouter('CREATE_TODO', {
+        method: 'PATCH',
+        routeParam: taskId || '',
+        body: JSON.stringify(data),
+      });
+      router.replace(PAGE_ROUTES.TODOS_LIST);
+    } catch (error) {
+      alert('Task updation failed');
+      setIsLoading(false);
+    }
+  };
+
+  const getTaskById = async () => {
+    if (!taskId) return;
+    try {
+      const res = await apiRouter('GET_TODOS', {
+        method: 'GET',
+        routeParam: taskId || '',
+      });
+      const { data } = (await res.json()) as GlobalApiResponse<TodoList>;
+      form.setValue('title', data.result.title);
+      form.setValue('description', data.result.description);
+      form.setValue('status', TodoStatus[data.result.status]);
+    } catch (error) {
+      alert('Task get failed');
+      setIsLoading(false);
+    }
+  };
+  const onSubmit = (data: CreateTaskSchemaType) => {
+    setIsLoading(true);
+    if (taskId) {
+      updateTask(data);
+    } else {
+      createTask(data);
+    }
+  };
+  useEffect(() => {
+    if (!taskId) return;
+    getTaskById();
+  }, [taskId]);
+
   return (
     <section className="flex flex-col justify-center items-center h-screen gap-8">
       <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Card className="w-full max-w-[52rem] min-w-[50rem]">
             <CardHeader>
-              <CardTitle className="text-2xl">Create Task</CardTitle>
+              <CardTitle className="text-2xl">{taskId ? 'Update' : 'Create'} Task</CardTitle>
               <CardDescription>
                 Enter your Task details. <br />
               </CardDescription>
@@ -65,7 +126,7 @@ const TodoActionPage = () => {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Task Description</FormLabel>
+                      <FormLabel>Description</FormLabel>
                       <FormControl>
                         <Textarea className="w-full" {...field} />
                       </FormControl>
@@ -82,7 +143,7 @@ const TodoActionPage = () => {
                     <FormItem>
                       <FormLabel>Status</FormLabel>
                       <FormControl>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select onValueChange={field.onChange} key={field.value} defaultValue={field.value}>
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Select Task status" />
                           </SelectTrigger>
@@ -103,15 +164,10 @@ const TodoActionPage = () => {
             </CardContent>
             <CardFooter>
               <div className="w-full">
-                <Button
-                  type="submit"
-                  // onClick={handleLoginSubmit}
-                  className="w-full"
-                  // disabled={mutation.isPending}
-                >
-                  {/* {mutation.isPending && <LoaderCircle className="animate-spin" />} */}
+                <Button type="submit" className="w-full">
+                  {isLoading && <LoaderCircle className="animate-spin" />}
 
-                  <span className="ml-2">Create Task</span>
+                  <span className="ml-2">{taskId ? 'Update' : 'Create'} Task</span>
                 </Button>
               </div>
             </CardFooter>

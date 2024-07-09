@@ -3,7 +3,9 @@ import { LOCAL_STORAGE_KEYS } from '@/constants/LOCAL_STORAGE_KEYS';
 
 export const apiRouter = async (
   input: keyof typeof API_ROUTES,
-  init?: RequestInit,
+  init?: RequestInit & {
+    routeParam?: string;
+  },
   options?: { skipAuthorization?: boolean; skipContentType?: boolean; skipCredentials?: boolean; skipBaseUrl?: boolean }
 ): Promise<Response> => {
   const token = localStorage.getItem(LOCAL_STORAGE_KEYS['TOKEN']);
@@ -19,8 +21,15 @@ export const apiRouter = async (
     headers.set('credentials', 'include');
   }
 
-  
-  const response = await fetch((!options?.skipBaseUrl ? BE_BASE_URL : '') + API_ROUTES[input], { ...init, headers });
+  let apiRouter: any = API_ROUTES[input];
+  if (init?.routeParam) {
+    apiRouter = API_ROUTES[input] + '/' + init?.routeParam;
+  }
+
+  const response = await fetch((!options?.skipBaseUrl ? BE_BASE_URL : '') + apiRouter, {
+    ...init,
+    headers,
+  });
 
   // handle 401 error
   if (response.status === 401) {

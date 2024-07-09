@@ -13,102 +13,25 @@ import {
   KeyboardSensor,
   TouchSensor,
   MouseSensor,
+  UniqueIdentifier,
 } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { type Task, TaskCard } from './TaskCard';
-import type { Column } from './BoardColumn';
 import { hasDraggableData } from './utils';
 import { coordinateGetter } from './multipleContainersKeyboardPreset';
+import { Column, ColumnId, defaultCols, TodoList } from '@/types';
 
-const defaultCols = [
-  {
-    id: 'todo' as const,
-    title: 'Todo',
-  },
-  {
-    id: 'in-progress' as const,
-    title: 'In progress',
-  },
-  {
-    id: 'done' as const,
-    title: 'Done',
-  },
-] satisfies Column[];
-
-export type ColumnId = (typeof defaultCols)[number]['id'];
-
-const initialTasks: Task[] = [
-  {
-    id: 'task1',
-    columnId: 'done',
-    content: 'Project initiation and planning',
-  },
-  {
-    id: 'task2',
-    columnId: 'done',
-    content: 'Gather requirements from stakeholders',
-  },
-  {
-    id: 'task3',
-    columnId: 'done',
-    content: 'Create wireframes and mockups',
-  },
-  {
-    id: 'task4',
-    columnId: 'in-progress',
-    content: 'Develop homepage layout',
-  },
-  {
-    id: 'task5',
-    columnId: 'in-progress',
-    content: 'Design color scheme and typography',
-  },
-  {
-    id: 'task6',
-    columnId: 'todo',
-    content: 'Implement user authentication',
-  },
-  {
-    id: 'task7',
-    columnId: 'todo',
-    content: 'Build contact us page',
-  },
-  {
-    id: 'task8',
-    columnId: 'todo',
-    content: 'Create product catalog',
-  },
-  {
-    id: 'task9',
-    columnId: 'todo',
-    content: 'Develop about us page',
-  },
-  {
-    id: 'task10',
-    columnId: 'todo',
-    content: 'Optimize website for mobile devices',
-  },
-  {
-    id: 'task11',
-    columnId: 'todo',
-    content: 'Integrate payment gateway',
-  },
-  {
-    id: 'task12',
-    columnId: 'todo',
-    content: 'Perform testing and bug fixing',
-  },
-  {
-    id: 'task13',
-    columnId: 'todo',
-    content: 'Launch website and deploy to server',
-  },
-];
-export function KanbanBoard() {
+export function KanbanBoard({
+  todoList,
+  deleteTask,
+}: {
+  todoList: Task[] | [];
+  deleteTask: (taskId: UniqueIdentifier) => void;
+}) {
   const [columns, setColumns] = useState<Column[]>(defaultCols);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
 
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [tasks, setTasks] = useState<Task[]>(todoList);
 
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
 
@@ -121,25 +44,34 @@ export function KanbanBoard() {
       coordinateGetter: coordinateGetter,
     })
   );
+  useEffect(() => {
+    setTasks(todoList);
+  }, [todoList]);
 
   return (
     <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragOver={onDragOver}>
       <BoardContainer>
         <SortableContext items={columnsId}>
           {columns.map((col) => (
-            <BoardColumn key={col.id} column={col} tasks={tasks.filter((task) => task.columnId === col.id)} />
+            <BoardColumn
+              deleteTask={deleteTask}
+              key={col.id}
+              column={col}
+              tasks={tasks.filter((task) => task.columnId === col.id)}
+            />
           ))}
         </SortableContext>
       </BoardContainer>
       <DragOverlay>
         {activeColumn && (
           <BoardColumn
+            deleteTask={deleteTask}
             isOverlay
             column={activeColumn}
             tasks={tasks.filter((task) => task.columnId === activeColumn.id)}
           />
         )}
-        {activeTask && <TaskCard task={activeTask} isOverlay />}
+        {activeTask && <TaskCard task={activeTask} isOverlay deleteTask={(e) => console.log(e)} />}
       </DragOverlay>
     </DndContext>
   );

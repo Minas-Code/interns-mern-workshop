@@ -8,11 +8,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { GripVertical } from 'lucide-react';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-
-export interface Column {
-  id: UniqueIdentifier;
-  title: string;
-}
+import { Column } from '@/types';
 
 export type ColumnType = 'Column';
 
@@ -25,9 +21,10 @@ interface BoardColumnProps {
   column: Column;
   tasks: Task[];
   isOverlay?: boolean;
+  deleteTask: (taskId: UniqueIdentifier) => void;
 }
 
-export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
+export function BoardColumn({ column, tasks, isOverlay, deleteTask }: BoardColumnProps) {
   const tasksIds = useMemo(() => {
     return tasks.map((task) => task.id);
   }, [tasks]);
@@ -85,7 +82,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
         <CardContent className="flex flex-grow flex-col gap-2 p-2">
           <SortableContext items={tasksIds}>
             {tasks.map((task) => (
-              <TaskCard key={task.id} task={task} />
+              <TaskCard key={task.id} task={task} deleteTask={deleteTask} />
             ))}
           </SortableContext>
         </CardContent>
