@@ -1,4 +1,3 @@
-import { TodoStatus } from '@/lib/enum';
 import { type UniqueIdentifier } from '@dnd-kit/core';
 
 export type GlobalApiResponse<T = any> = {

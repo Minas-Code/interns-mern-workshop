@@ -3,27 +3,19 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/text-area';
 import { useToast } from '@/components/ui/use-toast';
 import { PAGE_ROUTES } from '@/constants/API_ROUTES';
-import { TodoStatus } from '@/lib/enum';
-import { createTaskSchema, CreateTaskSchemaType } from '@/lib/schema';
+import { TodoStatus } from '@/constants/enum';
 import { GlobalApiResponse, TodoList } from '@/types';
 import { apiRouter } from '@/utils/api-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { CreateTaskSchemaType, createTaskSchema } from './schema';
 
 const TodoActionPage = () => {
   const params = useSearchParams();
@@ -112,6 +104,7 @@ const TodoActionPage = () => {
   useEffect(() => {
     if (!taskId) return;
     getTaskById();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskId]);
 
   return (

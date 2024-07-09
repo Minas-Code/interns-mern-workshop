@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const signupFormSchema = z
+export const signUpFormSchema = z
   .object({
     email: z.string().min(4, 'Email is required').email('Please enter a valid email'),
     name: z.string().min(1, 'Name is required').min(3, 'Too short'),
@@ -17,4 +17,4 @@ export const signupFormSchema = z
     }
   });
 
-export type signupFormType = z.infer<typeof signupFormSchema>;
+export type signUpFormType = z.infer<typeof signUpFormSchema>;
