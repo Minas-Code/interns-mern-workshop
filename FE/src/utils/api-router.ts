@@ -4,7 +4,8 @@ import { LOCAL_STORAGE_KEYS } from '@/constants/LOCAL_STORAGE_KEYS';
 export const apiRouter = async (
   input: keyof typeof API_ROUTES,
   init?: RequestInit & {
-    routeParam?: string;
+    routeParam?: string; // only supports 1 route param, and it should be the last one
+    queryParams?: any; // only supports object of depth 1
   },
   options?: { skipAuthorization?: boolean; skipContentType?: boolean; skipCredentials?: boolean; skipBaseUrl?: boolean }
 ): Promise<Response> => {
@@ -24,6 +25,10 @@ export const apiRouter = async (
   let apiRouter: any = API_ROUTES[input];
   if (init?.routeParam) {
     apiRouter = API_ROUTES[input] + '/' + init?.routeParam;
+  }
+  if (init?.queryParams) {
+    const params = new URLSearchParams(init?.queryParams);
+    apiRouter += '?' + params;
   }
 
   const response = await fetch((!options?.skipBaseUrl ? BE_BASE_URL : '') + apiRouter, {

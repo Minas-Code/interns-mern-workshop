@@ -52,10 +52,6 @@ export function KanbanBoard({
     setTasks(todoList);
   }, [todoList]);
 
-  useEffect(() => {
-    console.log(todoList, tasks);
-  }, [tasks]);
-
   const updateTask = async (data: CreateTaskSchemaType, taskId: string) => {
     try {
       await apiRouter('CREATE_TODO', {

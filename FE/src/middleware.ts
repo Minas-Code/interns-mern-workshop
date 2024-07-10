@@ -55,7 +55,7 @@ export function middleware(req: NextRequest) {
   }
 
   // saving request origin in cookie
-  if ([...PROTECTED_PAGE_ROUTES, ...PUBLIC_PAGE_ROUTES].includes(pageName)) {
+  if ([...PUBLIC_PAGE_ROUTES, ...PROTECTED_PAGE_ROUTES].includes(pageName)) {
     const searchParams = req.nextUrl.searchParams.size > 0 ? `?${req.nextUrl.searchParams.toString()}` : '';
     const res = NextResponse.json({});
 
@@ -69,11 +69,7 @@ export function middleware(req: NextRequest) {
       // only allow cookies to be transmitted over HTTPS
       httpOnly: true,
     });
-
-    return NextResponse.next();
   }
-
-  return NextResponse.next({ status: 404, statusText: 'Not Found' });
 }
 export const config = {
   matcher: '/((?!api|static|.*\\..*|_next).*)',
