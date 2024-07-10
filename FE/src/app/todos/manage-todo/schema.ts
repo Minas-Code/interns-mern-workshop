@@ -8,7 +8,7 @@ const displayToEnum = {
 
 export const createTaskSchema = z
   .object({
-    title: z.string().min(1, 'Title is required').max(10, 'Title is too long'),
+    title: z.string().min(1, 'Title is required').min(3, 'Title is too short').max(10, 'Title is too long'),
     description: z.string().min(1, 'Description is required'),
     status: z.enum(['Pending', 'In Progress', 'Completed']).transform((val) => displayToEnum[val]),
   })
