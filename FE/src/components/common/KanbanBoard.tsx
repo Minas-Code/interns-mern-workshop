@@ -16,9 +16,9 @@ import {
 } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { type Task, TaskCard } from './TaskCard';
-import { hasDraggableData } from './utils';
-import { coordinateGetter } from './multipleContainersKeyboardPreset';
-import { Column, ColumnId, defaultCols, TodoList } from '@/types';
+import { Column, ColumnId, defaultCols } from '@/types';
+import { coordinateGetter } from '@/hooks';
+import { hasDraggableData } from '@/utils/has-dragable-data';
 
 export function KanbanBoard({
   todoList,
