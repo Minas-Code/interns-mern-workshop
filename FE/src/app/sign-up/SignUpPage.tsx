@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { LoaderCircle } from 'lucide-react';
-import { signupFormSchema, signupFormType } from './types';
+import { signUpFormSchema, signUpFormType } from './types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { API_ROUTES, BE_BASE_URL, PAGE_ROUTES } from '@/constants/API_ROUTES';
@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { useAuthContext } from '@/components/context/AuthContext';
 import { useRouter } from 'next/navigation';
 
-const defaultValues: signupFormType = {
+const defaultValues: signUpFormType = {
   email: '',
   name: '',
   password: '',
@@ -25,9 +25,9 @@ export default function SignUpPage() {
   const { login } = useAuthContext();
   const router = useRouter();
 
-  const methods = useForm<signupFormType>({
+  const methods = useForm<signUpFormType>({
     defaultValues,
-    resolver: zodResolver(signupFormSchema),
+    resolver: zodResolver(signUpFormSchema),
     delayError: 500,
   });
 
@@ -37,7 +37,7 @@ export default function SignUpPage() {
     formState: { errors },
   } = methods;
 
-  const onSubmit = (values: signupFormType) => {
+  const onSubmit = (values: signUpFormType) => {
     setIsLoading(true);
     fetch(BE_BASE_URL + API_ROUTES.SIGN_UP, {
       method: 'POST',
@@ -46,7 +46,7 @@ export default function SignUpPage() {
       },
       body: JSON.stringify(values),
     }).then((res) => {
-      console.log(res.status, 'res signup');
+      console.log(res.status, 'res signUp');
       setIsLoading(false);
       if (res.status === 200 || res.status === 201) {
         login({ email: values.email, password: values.password }).then((res) => {

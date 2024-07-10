@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { PAGE_ROUTES } from '@/constants/API_ROUTES';
 import Link from 'next/link';
+
 export default function Error() {
   return (
     <section className="flex flex-col justify-center items-center h-screen gap-4">
