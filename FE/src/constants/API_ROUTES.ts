@@ -18,4 +18,4 @@ export enum API_ROUTES {
   ME = '/api/auth/me',
 }
 
-export const BE_BASE_URL = process.env.NEXT_PUBLIC_BE_BASE_URL || 'http://localhost:3000/api/v1';
+export const BE_BASE_URL = process.env.NEXT_PUBLIC_BE_BASE_URL || 'https://mern-be.apps.minascode.com';

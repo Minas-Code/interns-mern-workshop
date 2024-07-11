@@ -12,9 +12,10 @@ export const PUBLIC_API_ROUTES: API_ROUTES[] = [API_ROUTES.SIGN_IN];
 export const PROTECTED_API_ROUTES: API_ROUTES[] = [API_ROUTES.SIGN_OUT];
 
 export function middleware(req: NextRequest) {
-  const isLoggedIn = !!req.cookies.get('isLoggedIn')?.value;
-  const reqOrigin = req.cookies.get('reqOrigin')?.value || PAGE_ROUTES.BASE;
-  const pageName = req.nextUrl.pathname as PAGE_ROUTES;
+  const isLoggedIn = !!req.cookies.get('isLoggedIn')?.value; // true
+  const reqOrigin = req.cookies.get('reqOrigin')?.value || PAGE_ROUTES.BASE; // list
+
+  const pageName = req.nextUrl.pathname as PAGE_ROUTES; // sign-in
   const apiUrl = req.nextUrl.pathname as API_ROUTES;
 
   // PUBLIC PAGE ROUTES
@@ -57,7 +58,7 @@ export function middleware(req: NextRequest) {
   // saving request origin in cookie
   if ([...PUBLIC_PAGE_ROUTES, ...PROTECTED_PAGE_ROUTES].includes(pageName)) {
     const searchParams = req.nextUrl.searchParams.size > 0 ? `?${req.nextUrl.searchParams.toString()}` : '';
-    const res = NextResponse.json({});
+    const res = NextResponse.next();
 
     res.cookies.set('reqOrigin', pageName + searchParams, {
       // set path to root, so the cookie is valid for all PAGE_ROUTES
@@ -69,6 +70,8 @@ export function middleware(req: NextRequest) {
       // only allow cookies to be transmitted over HTTPS
       httpOnly: true,
     });
+
+    return res;
   }
 }
 export const config = {
