@@ -15,9 +15,11 @@ import { useRouter } from 'next/navigation';
 
 const defaultValues: signUpFormType = {
   email: '',
-  name: '',
+  first_name: '',
+  last_name: '',
   password: '',
   confirm_password: '',
+
 };
 export default function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -72,7 +74,8 @@ export default function SignUpPage() {
           <CardContent className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="name">Name</Label>
-              <Input {...register('name')} id="name" type="name" placeholder="my name" />
+              <Input {...register('first_name')} id="first_name" type="name" placeholder="first name" />
+              <Input {...register('last_name')} id="last_name" type="name" placeholder="last name" />
               {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
             </div>
             <div className="grid gap-2">
